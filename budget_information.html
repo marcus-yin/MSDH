@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSDH Budget Information</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    let isSubmitted = false;
+
+    function renderApp() {
+      const app = document.getElementById('app');
+
+      if (isSubmitted) {
+        app.innerHTML = `
+          <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
+              <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h2 class="text-2xl mb-2 text-gray-900">Budget Saved!</h2>
+              <p class="text-gray-600">The MSDH budget record has been captured.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      app.innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-700 to-indigo-700 px-8 py-6">
+                <p class="text-blue-100 text-sm uppercase tracking-wide">Mississippi State Department of Health</p>
+                <h1 class="text-3xl text-white mt-1">Budget Information</h1>
+                <p class="text-blue-100 mt-2">Capture a budget record for MSDH grants.</p>
+              </div>
+
+              <form id="budgetForm" class="px-8 py-6 space-y-6">
+                <section>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="projectName" class="block text-sm text-gray-700 mb-1">
+                        Project Name <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="projectName"
+                        name="projectName"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="projectName"></p>
+                    </div>
+
+                    <div>
+                      <label for="bli" class="block text-sm text-gray-700 mb-1">
+                        BLI <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="bli"
+                        name="bli"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="bli"></p>
+                    </div>
+
+                    <div>
+                      <label for="saasReportingCategory" class="block text-sm text-gray-700 mb-1">
+                        SAAS Reporting Category <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="saasReportingCategory"
+                        name="saasReportingCategory"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="saasReportingCategory"></p>
+                    </div>
+
+                    <div>
+                      <label for="magicInternalOrderWbs" class="block text-sm text-gray-700 mb-1">
+                        MAGIC Internal Order WBS <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="magicInternalOrderWbs"
+                        name="magicInternalOrderWbs"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="magicInternalOrderWbs"></p>
+                    </div>
+
+                    <div>
+                      <label for="magic" class="block text-sm text-gray-700 mb-1">
+                        MAGIC <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="magic"
+                        name="magic"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="magic"></p>
+                    </div>
+
+                    <div>
+                      <label for="functionalArea" class="block text-sm text-gray-700 mb-1">
+                        Functional Area <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="functionalArea"
+                        name="functionalArea"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="functionalArea"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="description" class="block text-sm text-gray-700 mb-1">
+                        Description <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="description"
+                        name="description"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="description"></p>
+                    </div>
+
+                    <div>
+                      <label for="msdhCode" class="block text-sm text-gray-700 mb-1">
+                        MSDH Code <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="msdhCode"
+                        name="msdhCode"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="msdhCode"></p>
+                    </div>
+
+                    <div>
+                      <label for="cdcCategoryGlCoding" class="block text-sm text-gray-700 mb-1">
+                        CDC Category/GL Coding <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="cdcCategoryGlCoding"
+                        name="cdcCategoryGlCoding"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="cdcCategoryGlCoding"></p>
+                    </div>
+
+                    <div>
+                      <label for="msdhCostCenter" class="block text-sm text-gray-700 mb-1">
+                        MSDH Cost Center (Cost Element) <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="msdhCostCenter"
+                        name="msdhCostCenter"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="msdhCostCenter"></p>
+                    </div>
+
+                    <div>
+                      <label for="requestedAmount" class="block text-sm text-gray-700 mb-1">
+                        Requested Amount <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="requestedAmount"
+                        name="requestedAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="requestedAmount"></p>
+                    </div>
+
+                    <div>
+                      <label for="approvedAmount" class="block text-sm text-gray-700 mb-1">
+                        Approved Amount <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="approvedAmount"
+                        name="approvedAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="approvedAmount"></p>
+                    </div>
+
+                    <div>
+                      <label for="percentApproved" class="block text-sm text-gray-700 mb-1">
+                        % Approved <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="percentApproved"
+                        name="percentApproved"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="percentApproved"></p>
+                    </div>
+
+                    <div>
+                      <label for="fund" class="block text-sm text-gray-700 mb-1">
+                        Fund <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="fund"
+                        name="fund"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="fund"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <div class="pt-2">
+                  <button
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-blue-700 to-indigo-700 text-white py-3 px-6 rounded-md hover:from-blue-800 hover:to-indigo-800 transition-all shadow-md hover:shadow-lg"
+                  >
+                    Save Budget Record
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <p class="text-center text-gray-600 text-sm mt-6">
+              All fields marked with <span class="text-red-500">*</span> are required.
+            </p>
+          </div>
+        </div>
+      `;
+
+      attachEventListeners();
+    }
+
+    function attachEventListeners() {
+      const form = document.getElementById('budgetForm');
+      if (form) {
+        form.addEventListener('submit', handleSubmit);
+      }
+    }
+
+    function showError(fieldName, message) {
+      const errorElement = document.querySelector(`[data-error="${fieldName}"]`);
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+      }
+    }
+
+    function hideAllErrors() {
+      const errorElements = document.querySelectorAll('[data-error]');
+      errorElements.forEach(element => {
+        element.classList.add('hidden');
+      });
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      hideAllErrors();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      let isValid = true;
+      const requiredFields = form.querySelectorAll('[required]');
+
+      requiredFields.forEach(field => {
+        const value = field.value.trim();
+        if (!value) {
+          showError(field.id, 'This field is required');
+          isValid = false;
+        }
+      });
+
+      if (!isValid) {
+        return;
+      }
+
+      console.log('Budget record submitted:', data);
+      isSubmitted = true;
+      renderApp();
+
+      setTimeout(() => {
+        isSubmitted = false;
+        renderApp();
+      }, 3000);
+    }
+
+    renderApp();
+  </script>
+</body>
+</html>
