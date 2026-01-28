@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSDH Grant Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="text-center mb-12">
+        <p class="text-blue-700 text-sm uppercase tracking-wide">Mississippi State Department of Health</p>
+        <h1 class="text-4xl font-semibold text-gray-900 mt-2">Grant Management Portal</h1>
+        <p class="text-gray-600 mt-3">Start a new grant application or capture budget information.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6 flex flex-col justify-between">
+          <div>
+            <h2 class="text-2xl text-gray-900">Grant Application</h2>
+            <p class="text-gray-600 mt-2">
+              Submit MSDH grant intake details, reporting schedules, sub-grantee awards, and contract data.
+            </p>
+          </div>
+          <a
+            href="https://apps.opengov.com/apps/y4evqsxa1/settings/user-interface/pages/view/a0irlpig6"
+            target="_top"
+            data-top-link="true"
+            class="mt-6 inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-indigo-700 text-white px-5 py-3 rounded-md hover:from-blue-800 hover:to-indigo-800 transition-all shadow-md"
+          >
+            Open Application
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6 flex flex-col justify-between">
+          <div>
+            <h2 class="text-2xl text-gray-900">Budget Information</h2>
+            <p class="text-gray-600 mt-2">
+              Capture MSDH budget details, coding fields, and approved amounts for tracking.
+            </p>
+          </div>
+          <a
+            href="https://apps.opengov.com/apps/y4evqsxa1/settings/user-interface/pages/view/wktjovbg1"
+            target="_top"
+            data-top-link="true"
+            class="mt-6 inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-indigo-700 text-white px-5 py-3 rounded-md hover:from-blue-800 hover:to-indigo-800 transition-all shadow-md"
+          >
+            Open Budget Form
+          </a>
+        </div>
+      </div>
+
+      <p class="text-center text-gray-500 text-sm mt-12">
+        Need help? Contact the MSDH grants team for assistance.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-top-link="true"]').forEach(link => {
+      link.addEventListener('click', event => {
+        const url = link.getAttribute('href');
+        if (!url) {
+          return;
+        }
+
+        event.preventDefault();
+
+        try {
+          if (window.top && window.top !== window) {
+            window.top.location.href = url;
+            return;
+          }
+        } catch (error) {
+          // If blocked by the browser or host, fall back.
+        }
+
+        window.location.href = url;
+      });
+    });
+  </script>
+</body>
+</html>
