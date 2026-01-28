@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSDH Grant Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    let isSubmitted = false;
+
+    function renderApp() {
+      const app = document.getElementById('app');
+
+      if (isSubmitted) {
+        app.innerHTML = `
+          <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
+              <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h2 class="text-2xl mb-2 text-gray-900">Application Submitted!</h2>
+              <p class="text-gray-600">Thank you for submitting your MSDH grant application. We'll review it and follow up soon.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      app.innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+              <!-- Header -->
+              <div class="bg-gradient-to-r from-blue-700 to-indigo-700 px-8 py-6">
+                <p class="text-blue-100 text-sm uppercase tracking-wide">Mississippi State Department of Health</p>
+                <h1 class="text-3xl text-white mt-1">Grant Application Intake</h1>
+                <p class="text-blue-100 mt-2">Provide the required details for MSDH grant intake and review.</p>
+              </div>
+
+              <!-- Form -->
+              <form id="applicationForm" class="px-8 py-6 space-y-10">
+                <!-- Funding Opportunities -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M3 12h18M3 18h7"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Funding Opportunities</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="fundingOpportunityTitle" class="block text-sm text-gray-700 mb-1">
+                        Funding Opportunity Title <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="fundingOpportunityTitle"
+                        name="fundingOpportunityTitle"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="fundingOpportunityTitle"></p>
+                    </div>
+
+                    <div>
+                      <label for="fundingAgency" class="block text-sm text-gray-700 mb-1">
+                        Funding Agency <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="fundingAgency"
+                        name="fundingAgency"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="fundingAgency"></p>
+                    </div>
+
+                    <div>
+                      <label for="cfdaNumber" class="block text-sm text-gray-700 mb-1">
+                        CFDA / Assistance Listing Number <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="cfdaNumber"
+                        name="cfdaNumber"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="cfdaNumber"></p>
+                    </div>
+
+                    <div>
+                      <label for="opportunityType" class="block text-sm text-gray-700 mb-1">
+                        Opportunity Type <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="opportunityType"
+                        name="opportunityType"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="nofo">NOFO</option>
+                        <option value="philanthropic">Philanthropic</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="opportunityType"></p>
+                    </div>
+
+                    <div>
+                      <label for="publicationDate" class="block text-sm text-gray-700 mb-1">
+                        Publication Date <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="publicationDate"
+                        name="publicationDate"
+                        type="date"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="publicationDate"></p>
+                    </div>
+
+                    <div>
+                      <label for="applicationDeadline" class="block text-sm text-gray-700 mb-1">
+                        Application Deadline <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="applicationDeadline"
+                        name="applicationDeadline"
+                        type="date"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="applicationDeadline"></p>
+                    </div>
+
+                    <div>
+                      <label for="matchRequirement" class="block text-sm text-gray-700 mb-1">
+                        Match Requirement <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="matchRequirement"
+                        name="matchRequirement"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="matchRequirement"></p>
+                    </div>
+
+                    <div>
+                      <label for="matchPercent" class="block text-sm text-gray-700 mb-1">
+                        Match % <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="matchPercent"
+                        name="matchPercent"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="matchPercent"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="requiredDocumentChecklist" class="block text-sm text-gray-700 mb-1">
+                        Required Document Checklist <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="requiredDocumentChecklist"
+                        name="requiredDocumentChecklist"
+                        rows="4"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                        placeholder="List the required documents..."
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="requiredDocumentChecklist"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Application -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Application</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                      <label for="internalNeedsNotes" class="block text-sm text-gray-700 mb-1">
+                        Internal Needs Assessment Notes <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="internalNeedsNotes"
+                        name="internalNeedsNotes"
+                        rows="4"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="internalNeedsNotes"></p>
+                    </div>
+
+                    <div>
+                      <label for="programArea" class="block text-sm text-gray-700 mb-1">
+                        Program Area <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="programArea"
+                        name="programArea"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="epi">EPI</option>
+                        <option value="opioid">Opioid</option>
+                        <option value="rural-health">Rural Health</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="programArea"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="projectNarrativeDraft" class="block text-sm text-gray-700 mb-1">
+                        Project Narrative Draft <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="projectNarrativeDraft"
+                        name="projectNarrativeDraft"
+                        rows="4"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="projectNarrativeDraft"></p>
+                    </div>
+
+                    <div>
+                      <label for="timelineDraft" class="block text-sm text-gray-700 mb-1">
+                        Timeline Draft <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="timelineDraft"
+                        name="timelineDraft"
+                        type="file"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="timelineDraft"></p>
+                    </div>
+
+                    <div>
+                      <label for="priorApprovalsNeeded" class="block text-sm text-gray-700 mb-1">
+                        Prior Approvals Needed <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="priorApprovalsNeeded"
+                        name="priorApprovalsNeeded"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="priorApprovalsNeeded"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="stakeholders" class="block text-sm text-gray-700 mb-1">
+                        Stakeholders <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="stakeholders"
+                        name="stakeholders"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="stakeholders"></p>
+                    </div>
+
+                    <div>
+                      <label for="reviewers" class="block text-sm text-gray-700 mb-1">
+                        Reviewers <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="reviewers"
+                        name="reviewers"
+                        type="text"
+                        required
+                        placeholder="Select MSDH reviewers"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="reviewers"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label class="block text-sm text-gray-700 mb-2">
+                        Budget Categories
+                      </label>
+                      <div class="overflow-x-auto border border-gray-200 rounded-md">
+                        <table class="min-w-full text-sm text-gray-700">
+                          <thead class="bg-gray-50">
+                            <tr>
+                              <th class="text-left font-medium px-4 py-2">Category</th>
+                              <th class="text-left font-medium px-4 py-2">Amount ($)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="border-t">
+                              <td class="px-4 py-2">Fringe Benefits</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetFringeBenefits"
+                                  name="budgetFringeBenefits"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t bg-gray-50">
+                              <td class="px-4 py-2">Travel</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetTravel"
+                                  name="budgetTravel"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t">
+                              <td class="px-4 py-2">Equipment</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetEquipment"
+                                  name="budgetEquipment"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t bg-gray-50">
+                              <td class="px-4 py-2">Supplies</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetSupplies"
+                                  name="budgetSupplies"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t">
+                              <td class="px-4 py-2">Contractual</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetContractual"
+                                  name="budgetContractual"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t bg-gray-50">
+                              <td class="px-4 py-2">Construction</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetConstruction"
+                                  name="budgetConstruction"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t">
+                              <td class="px-4 py-2">Subsidies, Loans, &amp; Grants (SLG)</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetSlg"
+                                  name="budgetSlg"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t bg-gray-50">
+                              <td class="px-4 py-2">Indirect Costs</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetIndirectCosts"
+                                  name="budgetIndirectCosts"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                            <tr class="border-t">
+                              <td class="px-4 py-2">Other costs</td>
+                              <td class="px-4 py-2">
+                                <input
+                                  id="budgetOtherCosts"
+                                  name="budgetOtherCosts"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label for="estimatedTotalBudget" class="block text-sm text-gray-700 mb-1">
+                        Estimated Total Budget <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="estimatedTotalBudget"
+                        name="estimatedTotalBudget"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="estimatedTotalBudget"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="budgetJustification" class="block text-sm text-gray-700 mb-1">
+                        Budget Justification <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="budgetJustification"
+                        name="budgetJustification"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="budgetJustification"></p>
+                    </div>
+
+                    <div>
+                      <label for="proposedSubrecipients" class="block text-sm text-gray-700 mb-1">
+                        Proposed Subrecipients <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="proposedSubrecipients"
+                        name="proposedSubrecipients"
+                        type="text"
+                        required
+                        placeholder="Select from the sub grantee table"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="proposedSubrecipients"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="anticipatedProcurementNeeds" class="block text-sm text-gray-700 mb-1">
+                        Anticipated Procurement Needs <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="anticipatedProcurementNeeds"
+                        name="anticipatedProcurementNeeds"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="anticipatedProcurementNeeds"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Budget -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V6m0 12v-2m9-4a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Budget</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="magicBudgetCodes" class="block text-sm text-gray-700 mb-1">
+                        MAGIC Budget Codes <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="magicBudgetCodes"
+                        name="magicBudgetCodes"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="magicBudgetCodes"></p>
+                    </div>
+
+                    <div>
+                      <label for="functionalArea" class="block text-sm text-gray-700 mb-1">
+                        Functional Area <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="functionalArea"
+                        name="functionalArea"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="functionalArea"></p>
+                    </div>
+
+                    <div>
+                      <label for="budgetInternalOrder" class="block text-sm text-gray-700 mb-1">
+                        Internal Order <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="budgetInternalOrder"
+                        name="budgetInternalOrder"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="budgetInternalOrder"></p>
+                    </div>
+
+                    <div>
+                      <label for="budgetSponsoredProgram" class="block text-sm text-gray-700 mb-1">
+                        Sponsored Program <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="budgetSponsoredProgram"
+                        name="budgetSponsoredProgram"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="budgetSponsoredProgram"></p>
+                    </div>
+
+                    <div>
+                      <label for="fund" class="block text-sm text-gray-700 mb-1">
+                        Fund <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="fund"
+                        name="fund"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="fund"></p>
+                    </div>
+
+                    <div>
+                      <label for="costCenter" class="block text-sm text-gray-700 mb-1">
+                        Cost Center <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="costCenter"
+                        name="costCenter"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="costCenter"></p>
+                    </div>
+
+                    <div>
+                      <label for="bliCode" class="block text-sm text-gray-700 mb-1">
+                        BLI Code <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="bliCode"
+                        name="bliCode"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="bliCode"></p>
+                    </div>
+
+                    <div>
+                      <label for="saasCategory" class="block text-sm text-gray-700 mb-1">
+                        SaaS Category <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="saasCategory"
+                        name="saasCategory"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="saasCategory"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="preAwardApprovers" class="block text-sm text-gray-700 mb-1">
+                        Pre-award Approvers <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="preAwardApprovers"
+                        name="preAwardApprovers"
+                        type="text"
+                        required
+                        placeholder="Select MSDH approvers"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="preAwardApprovers"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Grant -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m3 4H6a2 2 0 01-2-2V5a2 2 0 012-2h6l6 6v10a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Grant</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="noticeOfAwardUpload" class="block text-sm text-gray-700 mb-1">
+                        Notice of Award Upload <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="noticeOfAwardUpload"
+                        name="noticeOfAwardUpload"
+                        type="file"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="noticeOfAwardUpload"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="noaConditions" class="block text-sm text-gray-700 mb-1">
+                        NOA Conditions <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="noaConditions"
+                        name="noaConditions"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="noaConditions"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="restrictionsSpecialTerms" class="block text-sm text-gray-700 mb-1">
+                        Restrictions / Special Terms <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="restrictionsSpecialTerms"
+                        name="restrictionsSpecialTerms"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="restrictionsSpecialTerms"></p>
+                    </div>
+
+                    <div>
+                      <label for="approvedAwardAmount" class="block text-sm text-gray-700 mb-1">
+                        Approved Award Amount <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="approvedAwardAmount"
+                        name="approvedAwardAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="approvedAwardAmount"></p>
+                    </div>
+
+                    <div>
+                      <label for="matchCommitment" class="block text-sm text-gray-700 mb-1">
+                        Match Commitment <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="matchCommitment"
+                        name="matchCommitment"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="matchCommitment"></p>
+                    </div>
+
+                    <div>
+                      <label for="periodStartDate" class="block text-sm text-gray-700 mb-1">
+                        Period of Performance Start Date <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="periodStartDate"
+                        name="periodStartDate"
+                        type="date"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="periodStartDate"></p>
+                    </div>
+
+                    <div>
+                      <label for="periodEndDate" class="block text-sm text-gray-700 mb-1">
+                        Period of Performance End Date <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="periodEndDate"
+                        name="periodEndDate"
+                        type="date"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="periodEndDate"></p>
+                    </div>
+
+                    <div>
+                      <label for="grantInternalOrderNumber" class="block text-sm text-gray-700 mb-1">
+                        Internal Order Number <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="grantInternalOrderNumber"
+                        name="grantInternalOrderNumber"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="grantInternalOrderNumber"></p>
+                    </div>
+
+                    <div>
+                      <label for="grantSponsoredProgram" class="block text-sm text-gray-700 mb-1">
+                        Sponsored Program <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="grantSponsoredProgram"
+                        name="grantSponsoredProgram"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select a program...</option>
+                        <option value="programs-provided">Programs provided by MSDH</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="grantSponsoredProgram"></p>
+                    </div>
+
+                    <div>
+                      <label for="grantAnalystPoc" class="block text-sm text-gray-700 mb-1">
+                        Grant Analyst POC <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="grantAnalystPoc"
+                        name="grantAnalystPoc"
+                        type="text"
+                        required
+                        placeholder="Select MSDH analyst"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="grantAnalystPoc"></p>
+                    </div>
+
+                    <div>
+                      <label for="implementationPlanUpload" class="block text-sm text-gray-700 mb-1">
+                        Implementation Plan Upload <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="implementationPlanUpload"
+                        name="implementationPlanUpload"
+                        type="file"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="implementationPlanUpload"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="approvedWorkplanActivities" class="block text-sm text-gray-700 mb-1">
+                        Approved Workplan Activities <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="approvedWorkplanActivities"
+                        name="approvedWorkplanActivities"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="approvedWorkplanActivities"></p>
+                    </div>
+
+                    <div>
+                      <label for="monthlyReports" class="block text-sm text-gray-700 mb-1">
+                        Monthly Reports <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="monthlyReports"
+                        name="monthlyReports"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="monthlyReports"></p>
+                    </div>
+
+                    <div>
+                      <label for="quarterlyReports" class="block text-sm text-gray-700 mb-1">
+                        Quarterly Reports <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="quarterlyReports"
+                        name="quarterlyReports"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="quarterlyReports"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Sub Grantee Awards -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Sub Grantee Awards</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="subrecipientNames" class="block text-sm text-gray-700 mb-1">
+                        Subrecipient Names <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="subrecipientNames"
+                        name="subrecipientNames"
+                        type="text"
+                        required
+                        placeholder="Select from sub grantee list"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="subrecipientNames"></p>
+                    </div>
+
+                    <div>
+                      <label for="subAwardAmount" class="block text-sm text-gray-700 mb-1">
+                        Award Amount <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="subAwardAmount"
+                        name="subAwardAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="subAwardAmount"></p>
+                    </div>
+
+                    <div>
+                      <label for="reportingFrequency" class="block text-sm text-gray-700 mb-1">
+                        Reporting Frequency <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="reportingFrequency"
+                        name="reportingFrequency"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="annually">Annually</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="weekly">Weekly</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="reportingFrequency"></p>
+                    </div>
+
+                    <div>
+                      <label for="invoiceFrequency" class="block text-sm text-gray-700 mb-1">
+                        Invoice Frequency <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="invoiceFrequency"
+                        name="invoiceFrequency"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="annually">Annually</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="ad-hoc">Ad Hoc</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="invoiceFrequency"></p>
+                    </div>
+
+                    <div>
+                      <label for="riskAssessmentScore" class="block text-sm text-gray-700 mb-1">
+                        Risk Assessment Score <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="riskAssessmentScore"
+                        name="riskAssessmentScore"
+                        type="number"
+                        min="0"
+                        step="1"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="riskAssessmentScore"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="riskAssessmentScoreDescription" class="block text-sm text-gray-700 mb-1">
+                        Risk Assessment Score Description <span class="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="riskAssessmentScoreDescription"
+                        name="riskAssessmentScoreDescription"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                        placeholder="Provide narrative for the score."
+                      ></textarea>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="riskAssessmentScoreDescription"></p>
+                    </div>
+
+                    <div>
+                      <label for="monitoringType" class="block text-sm text-gray-700 mb-1">
+                        Monitoring Type <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="monitoringType"
+                        name="monitoringType"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="desk-review">Desk review</option>
+                        <option value="field-visit">Field visit</option>
+                        <option value="extended-review">Extended review</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="monitoringType"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Contract -->
+                <section>
+                  <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 9H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h2 class="text-xl text-gray-900">Contract</h2>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="procurementRequestId" class="block text-sm text-gray-700 mb-1">
+                        Procurement Request ID <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="procurementRequestId"
+                        name="procurementRequestId"
+                        type="number"
+                        min="0"
+                        step="1"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="procurementRequestId"></p>
+                    </div>
+
+                    <div>
+                      <label for="procurementType" class="block text-sm text-gray-700 mb-1">
+                        Procurement Type <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="procurementType"
+                        name="procurementType"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="sole-source">Sole Source</option>
+                        <option value="competitive">Competitive</option>
+                        <option value="emergency">Emergency</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="procurementType"></p>
+                    </div>
+
+                    <div>
+                      <label for="scopeOfWork" class="block text-sm text-gray-700 mb-1">
+                        Scope of Work <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="scopeOfWork"
+                        name="scopeOfWork"
+                        type="file"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="scopeOfWork"></p>
+                    </div>
+
+                    <div>
+                      <label for="ffataReportingRequired" class="block text-sm text-gray-700 mb-1">
+                        FFATA Reporting Required <span class="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="ffataReportingRequired"
+                        name="ffataReportingRequired"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="ffataReportingRequired"></p>
+                    </div>
+
+                    <div>
+                      <label for="ffataSubmissionDate" class="block text-sm text-gray-700 mb-1">
+                        FFATA Submission Date <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="ffataSubmissionDate"
+                        name="ffataSubmissionDate"
+                        type="date"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="ffataSubmissionDate"></p>
+                    </div>
+
+                    <div>
+                      <label for="contractExecutionDate" class="block text-sm text-gray-700 mb-1">
+                        Contract Execution Date <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="contractExecutionDate"
+                        name="contractExecutionDate"
+                        type="date"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="contractExecutionDate"></p>
+                    </div>
+
+                    <div>
+                      <label for="vendorDuns" class="block text-sm text-gray-700 mb-1">
+                        Vendor DUNS <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="vendorDuns"
+                        name="vendorDuns"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="vendorDuns"></p>
+                    </div>
+
+                    <div>
+                      <label for="vendorUei" class="block text-sm text-gray-700 mb-1">
+                        Vendor UEI <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="vendorUei"
+                        name="vendorUei"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      />
+                      <p class="text-red-500 text-sm mt-1 hidden" data-error="vendorUei"></p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                  <button
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-blue-700 to-indigo-700 text-white py-3 px-6 rounded-md hover:from-blue-800 hover:to-indigo-800 transition-all shadow-md hover:shadow-lg"
+                  >
+                    Submit MSDH Application
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Footer Note -->
+            <p class="text-center text-gray-600 text-sm mt-6">
+              All fields marked with <span class="text-red-500">*</span> are required.
+            </p>
+          </div>
+        </div>
+      `;
+
+      attachEventListeners();
+    }
+
+    function attachEventListeners() {
+      const form = document.getElementById('applicationForm');
+      if (form) {
+        form.addEventListener('submit', handleSubmit);
+      }
+    }
+
+    function showError(fieldName, message) {
+      const errorElement = document.querySelector(`[data-error="${fieldName}"]`);
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+      }
+    }
+
+    function hideError(fieldName) {
+      const errorElement = document.querySelector(`[data-error="${fieldName}"]`);
+      if (errorElement) {
+        errorElement.classList.add('hidden');
+      }
+    }
+
+    function hideAllErrors() {
+      const errorElements = document.querySelectorAll('[data-error]');
+      errorElements.forEach(element => {
+        element.classList.add('hidden');
+      });
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      hideAllErrors();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      let isValid = true;
+      const requiredFields = form.querySelectorAll('[required]');
+
+      requiredFields.forEach(field => {
+        const value = field.type === 'file' ? field.files.length : field.value.trim();
+        if (!value) {
+          showError(field.id, 'This field is required');
+          isValid = false;
+        } else {
+          hideError(field.id);
+        }
+      });
+
+      if (data.matchRequirement === 'yes' && !data.matchPercent) {
+        showError('matchPercent', 'Match percentage is required when match is needed');
+        isValid = false;
+      }
+
+      if (data.ffataReportingRequired === 'yes' && !data.ffataSubmissionDate) {
+        showError('ffataSubmissionDate', 'FFATA submission date is required');
+        isValid = false;
+      }
+
+      if (!isValid) {
+        return;
+      }
+
+      console.log('Form submitted:', data);
+      isSubmitted = true;
+      renderApp();
+
+      setTimeout(() => {
+        isSubmitted = false;
+        renderApp();
+      }, 3000);
+    }
+
+    renderApp();
+  </script>
+</body>
+</html>
