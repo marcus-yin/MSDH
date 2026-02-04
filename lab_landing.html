@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Purchase Request Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <div id="app"></div>
+
+  <script>
+    const state = {
+      cart: []
+    };
+
+    // ============================================
+    // API Configuration (aligns with reference structure)
+    // ============================================
+    const API_CONFIG = {
+      baseURL: 'https://api.ignatius.io',
+      requestTableKey: 'YOUR_REQUEST_TABLE_KEY',
+      requestItemsTableKey: 'YOUR_REQUEST_ITEMS_TABLE_KEY',
+      attachmentsTableKey: 'YOUR_ATTACHMENTS_TABLE_KEY',
+      submitEndpoint: '/api/formaction/postdata'
+    };
+
+    const FIELD_MAPPING = {
+      request: {
+        projectName: 'project_name',
+        fundingSource: 'funding_source',
+        costCenter: 'cost_center',
+        totalRequested: 'total_requested'
+      },
+      items: {
+        name: 'item_name',
+        description: 'description',
+        quantity: 'quantity',
+        unitCost: 'unit_cost',
+        vendor: 'preferred_vendor',
+        leadTime: 'lead_time',
+        justification: 'justification',
+        fundingSource: 'funding_source',
+        costCenter: 'cost_center'
+      },
+      attachments: {
+        fileName: 'file_name'
+      }
+    };
+
+    async function getAuthToken() {
+      // Reference structure supports token decryption if needed.
+      // For now, try localStorage("token") or localStorage("access_token").
+      return localStorage.getItem('access_token') || localStorage.getItem('token') || '';
+    }
+
+    async function apiPost(payload) {
+      const token = await getAuthToken();
+      if (!token) {
+        console.log('[Lab Request] No API token found. Skipping API call.');
+        return null;
+      }
+
+      const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.submitEndpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[Lab Request] API error:', errorText);
+        return null;
+      }
+
+      return response.json();
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value || 0);
+    }
+
+    function calculateTotal() {
+      return state.cart.reduce((sum, item) => sum + item.quantity * item.unitCost, 0);
+    }
+
+    function renderApp() {
+      const app = document.getElementById('app');
+      const total = calculateTotal();
+
+      app.innerHTML = `
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <header class="text-center mb-10">
+            <p class="text-blue-700 text-sm uppercase tracking-wide">Laboratory Purchasing</p>
+            <h1 class="text-4xl font-semibold text-gray-900 mt-2">Lab Equipment Request</h1>
+            <p class="text-gray-600 mt-3">
+              Add equipment to your basket and submit a purchase request for state approval.
+            </p>
+          </header>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <section class="lg:col-span-2 bg-white rounded-lg shadow-md border border-blue-100 p-6">
+              <h2 class="text-2xl text-gray-900 mb-4">Add Item</h2>
+              <form id="addItemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-sm text-gray-700 mb-1" for="itemName">
+                    Item Name <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="itemName"
+                    name="itemName"
+                    type="text"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-sm text-gray-700 mb-1" for="itemDescription">
+                    Description / Specs
+                  </label>
+                  <textarea
+                    id="itemDescription"
+                    name="itemDescription"
+                    rows="3"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="quantity">
+                    Quantity <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="quantity"
+                    name="quantity"
+                    type="number"
+                    min="1"
+                    step="1"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="unitCost">
+                    Unit Cost (USD) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="unitCost"
+                    name="unitCost"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="vendor">
+                    Preferred Vendor
+                  </label>
+                  <input
+                    id="vendor"
+                    name="vendor"
+                    type="text"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="leadTime">
+                    Lead Time
+                  </label>
+                  <input
+                    id="leadTime"
+                    name="leadTime"
+                    type="text"
+                    placeholder="e.g., 4-6 weeks"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="fundingSource">
+                    Funding Source <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="fundingSource"
+                    name="fundingSource"
+                    type="text"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-700 mb-1" for="costCenter">
+                    Cost Center <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="costCenter"
+                    name="costCenter"
+                    type="text"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-sm text-gray-700 mb-1" for="attachments">
+                    Attachments
+                  </label>
+                  <input
+                    id="attachments"
+                    name="attachments"
+                    type="file"
+                    multiple
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Upload quotes, specifications, or supporting documents.</p>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-sm text-gray-700 mb-1" for="justification">
+                    Justification <span class="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="justification"
+                    name="justification"
+                    rows="3"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  ></textarea>
+                </div>
+
+                <div class="md:col-span-2">
+                  <button
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-blue-700 to-indigo-700 text-white py-3 px-6 rounded-md hover:from-blue-800 hover:to-indigo-800 transition-all shadow-md"
+                  >
+                    Add to Basket
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <section class="bg-white rounded-lg shadow-md border border-blue-100 p-6 h-fit">
+              <h2 class="text-2xl text-gray-900 mb-4">Basket Summary</h2>
+              <p class="text-gray-600 text-sm mb-4">
+                ${state.cart.length ? `${state.cart.length} item(s) in basket` : 'No items yet.'}
+              </p>
+              <div class="flex items-center justify-between text-gray-900 font-semibold mb-6">
+                <span>Total</span>
+                <span>${formatCurrency(total)}</span>
+              </div>
+              <button
+                id="submitRequest"
+                class="w-full ${state.cart.length ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 cursor-not-allowed'} text-white py-3 px-6 rounded-md transition-all"
+                ${state.cart.length ? '' : 'disabled'}
+              >
+                Submit Request to State
+              </button>
+              <p class="text-gray-500 text-xs mt-3">
+                Submitting will send all basket items for approval.
+              </p>
+            </section>
+          </div>
+
+          <section class="mt-8 bg-white rounded-lg shadow-md border border-blue-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-2xl text-gray-900">Basket Items</h2>
+              <button
+                id="clearBasket"
+                class="text-sm text-red-600 hover:text-red-700"
+                ${state.cart.length ? '' : 'disabled'}
+              >
+                Clear basket
+              </button>
+            </div>
+            ${renderTable()}
+          </section>
+        </div>
+      `;
+
+      attachEventListeners();
+    }
+
+    function renderTable() {
+      if (!state.cart.length) {
+        return '<p class="text-gray-500 text-sm">Add items to begin your purchase request.</p>';
+      }
+
+      const rows = state.cart.map((item, index) => `
+        <tr class="border-t">
+          <td class="px-4 py-3">${item.name}</td>
+          <td class="px-4 py-3">${item.vendor || '-'}</td>
+          <td class="px-4 py-3">${item.quantity}</td>
+          <td class="px-4 py-3">${formatCurrency(item.unitCost)}</td>
+          <td class="px-4 py-3">${formatCurrency(item.quantity * item.unitCost)}</td>
+          <td class="px-4 py-3">${item.fundingSource || '-'}</td>
+          <td class="px-4 py-3">${item.costCenter || '-'}</td>
+          <td class="px-4 py-3">${item.attachments.length ? item.attachments.join(', ') : '-'}</td>
+          <td class="px-4 py-3 text-right">
+            <button
+              class="text-sm text-red-600 hover:text-red-700"
+              data-remove-index="${index}"
+            >
+              Remove
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-gray-700">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="text-left font-medium px-4 py-3">Item</th>
+                <th class="text-left font-medium px-4 py-3">Vendor</th>
+                <th class="text-left font-medium px-4 py-3">Qty</th>
+                <th class="text-left font-medium px-4 py-3">Unit Cost</th>
+                <th class="text-left font-medium px-4 py-3">Line Total</th>
+                <th class="text-left font-medium px-4 py-3">Funding Source</th>
+                <th class="text-left font-medium px-4 py-3">Cost Center</th>
+                <th class="text-left font-medium px-4 py-3">Attachments</th>
+                <th class="text-right font-medium px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function attachEventListeners() {
+      const addForm = document.getElementById('addItemForm');
+      const submitRequest = document.getElementById('submitRequest');
+      const clearBasket = document.getElementById('clearBasket');
+
+      if (addForm) {
+        addForm.addEventListener('submit', handleAddItem);
+      }
+
+      if (submitRequest) {
+        submitRequest.addEventListener('click', handleSubmitRequest);
+      }
+
+      if (clearBasket) {
+        clearBasket.addEventListener('click', () => {
+          if (!state.cart.length) {
+            return;
+          }
+          state.cart = [];
+          renderApp();
+        });
+      }
+
+      document.querySelectorAll('[data-remove-index]').forEach(button => {
+        button.addEventListener('click', event => {
+          const index = Number(event.currentTarget.getAttribute('data-remove-index'));
+          if (Number.isNaN(index)) {
+            return;
+          }
+          state.cart.splice(index, 1);
+          renderApp();
+        });
+      });
+    }
+
+    function handleAddItem(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+      const attachmentFiles = Array.from(form.querySelector('#attachments').files || []);
+      const item = {
+        name: formData.get('itemName').trim(),
+        description: formData.get('itemDescription').trim(),
+        quantity: Number(formData.get('quantity')),
+        unitCost: Number(formData.get('unitCost')),
+        vendor: formData.get('vendor').trim(),
+        leadTime: formData.get('leadTime').trim(),
+        fundingSource: formData.get('fundingSource').trim(),
+        costCenter: formData.get('costCenter').trim(),
+        attachments: attachmentFiles.map(file => file.name),
+        justification: formData.get('justification').trim()
+      };
+
+      if (!item.name || !item.quantity || !item.unitCost || !item.justification || !item.fundingSource || !item.costCenter) {
+        return;
+      }
+
+      state.cart.push(item);
+      form.reset();
+      renderApp();
+    }
+
+    function handleSubmitRequest() {
+      if (!state.cart.length) {
+        return;
+      }
+
+      submitPurchaseRequest();
+    }
+
+    async function submitPurchaseRequest() {
+      const totalRequested = calculateTotal();
+
+      const requestPayload = {
+        ApplicationTableKey: API_CONFIG.requestTableKey,
+        FieldsList: [
+          { Name: FIELD_MAPPING.request.totalRequested, Value: totalRequested }
+        ]
+      };
+
+      console.log('[Lab Request] Payload preview:', {
+        request: requestPayload,
+        items: state.cart
+      });
+
+      // API flow (mirrors reference structure):
+      // 1) Create request record
+      // 2) Create request item records (one per basket item)
+      // 3) Create attachment records (file metadata)
+      const requestResult = await apiPost(requestPayload);
+      if (!requestResult) {
+        alert('Unable to submit request. Please try again or contact support.');
+        return;
+      }
+
+      const requestRid = requestResult.recordId || requestResult.Rid;
+      for (const item of state.cart) {
+        const itemPayload = {
+          ApplicationTableKey: API_CONFIG.requestItemsTableKey,
+          FieldsList: [
+            { Name: FIELD_MAPPING.items.name, Value: item.name },
+            { Name: FIELD_MAPPING.items.description, Value: item.description },
+            { Name: FIELD_MAPPING.items.quantity, Value: item.quantity },
+            { Name: FIELD_MAPPING.items.unitCost, Value: item.unitCost },
+            { Name: FIELD_MAPPING.items.vendor, Value: item.vendor },
+            { Name: FIELD_MAPPING.items.leadTime, Value: item.leadTime },
+            { Name: FIELD_MAPPING.items.justification, Value: item.justification },
+            { Name: FIELD_MAPPING.items.fundingSource, Value: item.fundingSource },
+            { Name: FIELD_MAPPING.items.costCenter, Value: item.costCenter },
+            { Name: 'related_request', Value: requestRid }
+          ]
+        };
+        await apiPost(itemPayload);
+      }
+
+      const attachmentNames = state.cart.flatMap(item => item.attachments);
+      for (const fileName of attachmentNames) {
+        const attachmentPayload = {
+          ApplicationTableKey: API_CONFIG.attachmentsTableKey,
+          FieldsList: [
+            { Name: FIELD_MAPPING.attachments.fileName, Value: fileName },
+            { Name: 'related_request', Value: requestRid }
+          ]
+        };
+        await apiPost(attachmentPayload);
+      }
+
+      alert('Your purchase request has been submitted for approval.');
+      state.cart = [];
+      renderApp();
+    }
+
+    renderApp();
+  </script>
+</body>
+</html>
