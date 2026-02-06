@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSDH User Journey Map</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .step {
+      border: 1px solid #c7d2fe;
+      background: #ffffff;
+    }
+    .decision {
+      border: 1px solid #fbbf24;
+      background: #fffbeb;
+    }
+    .connector {
+      height: 2px;
+      background: #c7d2fe;
+      flex: 1;
+    }
+    .arrow {
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 10px solid #c7d2fe;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="text-center mb-10">
+      <p class="text-blue-700 text-sm uppercase tracking-wide">Mississippi State Department of Health</p>
+      <h1 class="text-4xl font-semibold text-gray-900 mt-2">User Journey Map</h1>
+      <p class="text-gray-600 mt-3">Spending Request + Payment Request process from start to finish.</p>
+    </header>
+
+    <section class="bg-white rounded-lg shadow-md border border-blue-100 p-6 mb-8">
+      <h2 class="text-2xl text-gray-900 mb-4">Spending Request (Lab Equipment)</h2>
+      <div class="space-y-6">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <div class="step rounded-md px-4 py-3 w-full md:w-64">
+            <p class="text-sm text-gray-500 uppercase">Lab Requestor</p>
+            <p class="text-gray-900 font-semibold">1. Spending Request</p>
+            <p class="text-sm text-gray-600 mt-1">Start request and capture initial details.</p>
+          </div>
+          <div class="hidden md:flex items-center flex-1 gap-2">
+            <div class="connector"></div><div class="arrow"></div>
+          </div>
+          <div class="step rounded-md px-4 py-3 w-full md:w-72">
+            <p class="text-sm text-gray-500 uppercase">Lab Requestor</p>
+            <p class="text-gray-900 font-semibold">Identify Budget, Scope, Amount</p>
+            <p class="text-sm text-gray-600 mt-1">Budget categories, narrative, timeline, docs.</p>
+          </div>
+          <div class="hidden md:flex items-center flex-1 gap-2">
+            <div class="connector"></div><div class="arrow"></div>
+          </div>
+          <div class="step rounded-md px-4 py-3 w-full md:w-64">
+            <p class="text-sm text-gray-500 uppercase">MSDH Program</p>
+            <p class="text-gray-900 font-semibold">2. Program Review</p>
+            <p class="text-sm text-gray-600 mt-1">Validate scope and documentation.</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <div class="decision rounded-md px-4 py-3 w-full md:w-56">
+            <p class="text-sm text-gray-500 uppercase">Decision</p>
+            <p class="text-gray-900 font-semibold">Approved?</p>
+          </div>
+          <div class="hidden md:flex items-center flex-1 gap-2">
+            <div class="connector"></div><div class="arrow"></div>
+          </div>
+          <div class="step rounded-md px-4 py-3 w-full md:w-64">
+            <p class="text-sm text-gray-500 uppercase">Lab Requestor</p>
+            <p class="text-gray-900 font-semibold">3b. Revise per Comment</p>
+            <p class="text-sm text-gray-600 mt-1">Update and resubmit if needed.</p>
+          </div>
+          <div class="hidden md:flex items-center flex-1 gap-2">
+            <div class="connector"></div><div class="arrow"></div>
+          </div>
+          <div class="step rounded-md px-4 py-3 w-full md:w-64">
+            <p class="text-sm text-gray-500 uppercase">MSDH Program</p>
+            <p class="text-gray-900 font-semibold">3a. Status Update</p>
+            <p class="text-sm text-gray-600 mt-1">Approved request moves forward.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
+      <h2 class="text-2xl text-gray-900 mb-4">Payment Request (Reimbursement)</h2>
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Finance</p>
+            <p class="text-gray-900 font-semibold">1. Expenditures</p>
+            <p class="text-sm text-gray-600 mt-1">Record expenditures and source data.</p>
+          </div>
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Finance</p>
+            <p class="text-gray-900 font-semibold">2. Choice</p>
+            <p class="text-sm text-gray-600 mt-1">Upload GAB and forward to review.</p>
+          </div>
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Program</p>
+            <p class="text-gray-900 font-semibold">3. Program Review</p>
+            <p class="text-sm text-gray-600 mt-1">Confirm eligibility and compliance.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">Department</p>
+            <p class="text-gray-900 font-semibold">4. Department Review</p>
+            <p class="text-sm text-gray-600 mt-1">Departmental approval step.</p>
+          </div>
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Finance</p>
+            <p class="text-gray-900 font-semibold">5. SAP JV</p>
+            <p class="text-sm text-gray-600 mt-1">Financial journal entry processing.</p>
+          </div>
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Finance</p>
+            <p class="text-gray-900 font-semibold">6. Cash Receipts</p>
+            <p class="text-sm text-gray-600 mt-1">Record receipts and reconciliation.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">DRA</p>
+            <p class="text-gray-900 font-semibold">7. Approval</p>
+            <p class="text-sm text-gray-600 mt-1">Final authorization.</p>
+          </div>
+          <div class="step rounded-md px-4 py-3">
+            <p class="text-sm text-gray-500 uppercase">MSDH Program</p>
+            <p class="text-gray-900 font-semibold">8. Status Update</p>
+            <p class="text-sm text-gray-600 mt-1">Notify stakeholders and close request.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 bg-white rounded-lg shadow-md border border-blue-100 p-6">
+      <h2 class="text-2xl text-gray-900 mb-2">Grant Application Journey</h2>
+      <p class="text-sm text-gray-600 mb-5">
+        Derived from grant fields in the MSDH requirements (NOA, award amount, period of performance,
+        implementation plan, and reporting requirements).
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Draft / Intake</p>
+          <p class="text-sm text-gray-600 mt-1">Funding opportunity, narrative, and initial budget captured.</p>
+        </div>
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Review & Approvals</p>
+          <p class="text-sm text-gray-600 mt-1">Program review, prior approvals, stakeholder alignment.</p>
+        </div>
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Awarded (NOA)</p>
+          <p class="text-sm text-gray-600 mt-1">NOA uploaded, award amount confirmed, terms recorded.</p>
+        </div>
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Active / Implementation</p>
+          <p class="text-sm text-gray-600 mt-1">Implementation plan and approved workplan activities in motion.</p>
+        </div>
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Reporting</p>
+          <p class="text-sm text-gray-600 mt-1">Monthly and quarterly reporting schedule tracked.</p>
+        </div>
+        <div class="step rounded-md px-4 py-3">
+          <p class="text-sm text-gray-500 uppercase">Status</p>
+          <p class="text-gray-900 font-semibold">Closeout</p>
+          <p class="text-sm text-gray-600 mt-1">Period of performance ends; final status update completed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 bg-white rounded-lg shadow-md border border-blue-100 p-6">
+      <h2 class="text-2xl text-gray-900 mb-4">Key Data Requirements</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700">
+        <div>
+          <p class="font-semibold text-gray-900 mb-1">Funding & Application</p>
+          <p>Opportunity details, deadlines, match %, program area, narratives, approvals, stakeholders.</p>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900 mb-1">Budget & Grant</p>
+          <p>MAGIC codes, internal order, cost center, BLI, NOA docs, period dates, analyst POC.</p>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900 mb-1">Sub‑Grantee & Contracts</p>
+          <p>Subrecipients, risk scores, monitoring, procurement type, FFATA, scope of work.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

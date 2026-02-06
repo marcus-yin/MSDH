@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Management System - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .tab-btn {
+            @apply px-4 py-2 text-sm font-medium rounded-md transition-colors;
+        }
+        .tab-btn.active {
+            @apply bg-blue-600 text-white;
+        }
+        .tab-btn:not(.active) {
+            @apply bg-white text-gray-700 hover:bg-gray-100;
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="p-4 md:p-8">
+        <div class="max-w-7xl mx-auto space-y-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+                <div class="text-center flex-1 space-y-2">
+                    <h1 class="text-4xl font-bold text-gray-900">Grant Management System</h1>
+                    <p class="text-gray-600">Comprehensive grant lifecycle management</p>
+                </div>
+                <button onclick="window.location.href='index.html'" 
+                        class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                    <i class="fas fa-home"></i>
+                    Home
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="bg-white rounded-lg shadow p-2 overflow-x-auto">
+                <div class="flex gap-2 flex-nowrap min-w-max">
+                    <button class="tab-btn active" onclick="switchTab('funding_opportunity')">Funding</button>
+                    <button class="tab-btn" onclick="switchTab('application')">Application</button>
+                    <button class="tab-btn" onclick="switchTab('budget')">Budget</button>
+                    <button class="tab-btn" onclick="switchTab('budget_code')">Budget Codes</button>
+                    <button class="tab-btn" onclick="switchTab('grant')">Grant</button>
+                    <button class="tab-btn" onclick="switchTab('subgrantee_award')">Sub Awards</button>
+                    <button class="tab-btn" onclick="switchTab('contract')">Contract</button>
+                    <button class="tab-btn" onclick="switchTab('invoice')">Invoice</button>
+                    <button class="tab-btn" onclick="switchTab('compliance')">Compliance</button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="content-area">
+                <!-- Sections will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
